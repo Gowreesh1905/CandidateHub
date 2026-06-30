@@ -21,9 +21,7 @@ export class PdfResumeIngestor implements IIngestor {
       text = data.text;
     }
     
-    console.log("\n=== RAW PDF TEXT EXTRACTED ===");
-    console.log(text);
-    console.log("==============================\n");
+
 
     if (!text) {
        text = `John Doe - Resume

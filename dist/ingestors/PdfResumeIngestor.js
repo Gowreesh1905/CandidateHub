@@ -53,9 +53,6 @@ class PdfResumeIngestor {
             const data = await new parser(dataBuffer);
             text = data.text;
         }
-        console.log("\n=== RAW PDF TEXT EXTRACTED ===");
-        console.log(text);
-        console.log("==============================\n");
         if (!text) {
             text = `John Doe - Resume
        Email: john.doe@example.com

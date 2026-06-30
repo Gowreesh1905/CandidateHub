@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { parse } from 'csv-parse';
-import { IIngestor, NormalizedRecord } from '../types';
+import { IIngestor, NormalizedRecord } from '../types.js';
 
 export class CsvIngestor implements IIngestor {
   sourceType = 'Recruiter CSV';

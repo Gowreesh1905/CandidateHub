@@ -1,6 +1,7 @@
 import * as fs from 'fs';
+// @ts-ignore
 import pdfParse from 'pdf-parse';
-import { IIngestor, NormalizedRecord } from '../types';
+import { IIngestor, NormalizedRecord } from '../types.js';
 
 export class PdfResumeIngestor implements IIngestor {
   sourceType = 'Resume PDF';

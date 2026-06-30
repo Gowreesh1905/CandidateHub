@@ -1,0 +1,9 @@
+{
+  "fields": [
+    { "path": "candidateName", "from": "full_name", "type": "string", "required": true },
+    { "path": "contact.email", "from": "emails[0]", "type": "string", "required": true },
+    { "path": "contact.mobile", "from": "phones[0]", "type": "string", "normalize": "E164" }
+  ],
+  "include_confidence": false,
+  "on_missing": "omit"
+}

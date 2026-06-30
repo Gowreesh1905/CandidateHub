@@ -76,7 +76,15 @@ program
         // 4. Conflict Resolution (Merging)
         const canonicalProfiles = groups.map((group) => (0, merger_js_1.mergeCandidateGroup)(group));
         // 5. Config-Driven Projection
-        const finalOutputs = canonicalProfiles.map((profile) => projector_js_1.ProjectionEngine.project(profile, config));
+        const finalOutputs = [];
+        canonicalProfiles.forEach((profile) => {
+            try {
+                finalOutputs.push(projector_js_1.ProjectionEngine.project(profile, config));
+            }
+            catch (error) {
+                console.log(`\n⚠️ [PIPELINE WARNING] Skipping Candidate '${profile.full_name || profile.candidate_id}': ${error.message}`);
+            }
+        });
         // 6. Output JSON
         console.log(JSON.stringify(finalOutputs, null, 2));
         // 7. Print Transformation Report

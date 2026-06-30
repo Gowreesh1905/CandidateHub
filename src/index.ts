@@ -52,7 +52,14 @@ program
       const canonicalProfiles = groups.map((group: typeof groups[0]) => mergeCandidateGroup(group));
 
       // 5. Config-Driven Projection
-      const finalOutputs = canonicalProfiles.map((profile: typeof canonicalProfiles[0]) => ProjectionEngine.project(profile, config));
+      const finalOutputs: any[] = [];
+      canonicalProfiles.forEach((profile: typeof canonicalProfiles[0]) => {
+        try {
+          finalOutputs.push(ProjectionEngine.project(profile, config));
+        } catch (error: any) {
+          console.log(`\n⚠️ [PIPELINE WARNING] Skipping Candidate '${profile.full_name || profile.candidate_id}': ${error.message}`);
+        }
+      });
 
       // 6. Output JSON
       console.log(JSON.stringify(finalOutputs, null, 2));

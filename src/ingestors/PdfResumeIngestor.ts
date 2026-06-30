@@ -1,15 +1,30 @@
 import * as fs from 'fs';
-// @ts-ignore
-import pdfParse from 'pdf-parse';
 import { IIngestor, NormalizedRecord } from '../types.js';
+import { createRequire } from 'module';
 
 export class PdfResumeIngestor implements IIngestor {
   sourceType = 'Resume PDF';
 
   async ingest(filePath: string): Promise<NormalizedRecord[]> {
     const dataBuffer = fs.readFileSync(filePath);
-    const data = await pdfParse(dataBuffer);
-    const text = data.text;
+    // Use createRequire to load pdf-parse (CommonJS module)
+    const require = createRequire(import.meta.url);
+    // @ts-ignore - pdf-parse module structure varies
+    let pdfParse = require('pdf-parse');
+    // Handle different export formats
+    if (typeof pdfParse !== 'function') {
+      pdfParse = pdfParse.default || Object.values(pdfParse)[0];
+    }
+    // pdf-parse might be a class or a function
+    const data = typeof pdfParse === 'function' 
+      ? pdfParse.prototype ? await new pdfParse(dataBuffer) : await pdfParse(dataBuffer)
+      : await pdfParse(dataBuffer);
+    const text = data?.text || data || '';
+    
+    // If text is still not a string, return empty result
+    if (typeof text !== 'string' || !text) {
+      return [];
+    }
 
     // Simple Regex Heuristics for extraction
     const emailMatch = text.match(/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+/);

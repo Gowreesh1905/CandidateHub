@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 import * as fs from 'fs';
-import { CsvIngestor } from './ingestors/CsvIngestor';
-import { PdfResumeIngestor } from './ingestors/PdfResumeIngestor';
-import { groupRecordsByIdentity, mergeCandidateGroup } from './merger';
-import { ProjectionEngine } from './projector';
-import { ProjectionConfig } from './types';
+import { CsvIngestor } from './ingestors/CsvIngestor.js';
+import { PdfResumeIngestor } from './ingestors/PdfResumeIngestor.js';
+import { groupRecordsByIdentity, mergeCandidateGroup } from './merger.js';
+import { ProjectionEngine } from './projector.js';
+import type { ProjectionConfig } from './types.js';
 
 const program = new Command();
 
@@ -49,10 +49,10 @@ program
       const groups = groupRecordsByIdentity(allNormalizedRecords);
 
       // 4. Conflict Resolution (Merging)
-      const canonicalProfiles = groups.map(group => mergeCandidateGroup(group));
+      const canonicalProfiles = groups.map((group: typeof groups[0]) => mergeCandidateGroup(group));
 
       // 5. Config-Driven Projection
-      const finalOutputs = canonicalProfiles.map(profile => ProjectionEngine.project(profile, config));
+      const finalOutputs = canonicalProfiles.map((profile: typeof canonicalProfiles[0]) => ProjectionEngine.project(profile, config));
 
       // 6. Output JSON
       console.log(JSON.stringify(finalOutputs, null, 2));

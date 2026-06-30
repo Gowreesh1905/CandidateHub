@@ -79,6 +79,27 @@ program
         const finalOutputs = canonicalProfiles.map((profile) => projector_js_1.ProjectionEngine.project(profile, config));
         // 6. Output JSON
         console.log(JSON.stringify(finalOutputs, null, 2));
+        // 7. Print Transformation Report
+        console.log('\n======================================================');
+        console.log('                 TRANSFORMATION REPORT                ');
+        console.log('======================================================');
+        console.log(`Total Inputs Processed: ${allNormalizedRecords.length} records`);
+        console.log(`Total Candidates Resolved: ${canonicalProfiles.length} unique candidates`);
+        console.log('\n--- Conflict Resolution Log ---');
+        canonicalProfiles.forEach(profile => {
+            if (profile.provenance && profile.provenance.length > 0) {
+                const multiSource = new Set(profile.provenance.map(p => p.source)).size > 1;
+                if (multiSource) {
+                    console.log(`\nCandidate: ${profile.full_name || profile.candidate_id}`);
+                    console.log(`Confidence: ${(profile.overall_confidence * 100).toFixed(1)}%`);
+                    console.log('Field Decisions:');
+                    profile.provenance.forEach(p => {
+                        console.log(`  - [${p.field}]: Chose '${p.source}' (${p.method})`);
+                    });
+                }
+            }
+        });
+        console.log('======================================================\n');
     }
     catch (error) {
         console.error(`Pipeline Error:\n${error.stack}`);

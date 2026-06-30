@@ -1,6 +1,6 @@
-import get from 'lodash/get';
-import { CanonicalProfile } from './schema';
-import { ProjectionConfig } from './types';
+import { get } from 'lodash-es';
+import type { CanonicalProfile } from './schema.js';
+import type { ProjectionConfig } from './types.js';
 
 export class ProjectionEngine {
   

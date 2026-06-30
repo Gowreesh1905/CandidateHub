@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
-import { CanonicalProfile } from './schema';
-import { NormalizedRecord } from './types';
+import type { CanonicalProfile } from './schema.js';
+import type { NormalizedRecord } from './types.js';
 
 // Field-level trust weights per source (0.0 to 1.0)
 const TRUST_MATRIX: Record<string, Partial<Record<keyof CanonicalProfile, number>>> = {
@@ -33,13 +33,13 @@ export function groupRecordsByIdentity(records: NormalizedRecord[]): NormalizedR
     let matchedGroup = groups.find(group => {
       // Pass 1: Exact Email Match
       const hasSharedEmail = group.some(g => 
-        g.profile.emails?.some(email => record.profile.emails?.includes(email))
+        g.profile.emails?.some((email: string) => record.profile.emails?.includes(email))
       );
       if (hasSharedEmail) return true;
 
       // Pass 2: Exact Phone Match
       const hasSharedPhone = group.some(g => 
-        g.profile.phones?.some(phone => record.profile.phones?.includes(phone))
+        g.profile.phones?.some((phone: string) => record.profile.phones?.includes(phone))
       );
       
       // Edge Case: If they share a phone but have completely different emails, do not merge!

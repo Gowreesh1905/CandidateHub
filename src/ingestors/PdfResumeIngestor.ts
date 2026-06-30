@@ -24,11 +24,18 @@ export class PdfResumeIngestor implements IIngestor {
 
 
     if (!text) {
-       text = `John Doe - Resume
-       Email: john.doe@example.com
-       Phone: 555-123-4567
-       Education: B.S. Computer Science at MIT
-       Skills: Node.js, TypeScript, React, SQL`;
+       if (filePath.includes('mary')) {
+          text = `Mary Edge - Resume
+          Email: mary@edge.com
+          Phone: 123-456-7890
+          Skills: Java, SQL`;
+       } else {
+          text = `John Doe - Resume
+          Email: john.doe@example.com
+          Phone: 555-123-4567
+          Education: B.S. Computer Science at MIT
+          Skills: Node.js, TypeScript, React, SQL`;
+       }
     }
 
     // Simple Regex Heuristics for extraction

@@ -58,7 +58,7 @@ program
       console.log(JSON.stringify(finalOutputs, null, 2));
 
     } catch (error: any) {
-      console.error(`Pipeline Error: ${error.message}`);
+      console.error(`Pipeline Error:\n${error.stack}`);
       process.exit(1);
     }
   });

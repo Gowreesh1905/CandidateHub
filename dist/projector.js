@@ -1,5 +1,8 @@
-import { get } from 'lodash-es';
-export class ProjectionEngine {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectionEngine = void 0;
+const lodash_es_1 = require("lodash-es");
+class ProjectionEngine {
     /**
      * Transforms the internal CanonicalProfile into the shape requested by the JSON Config.
      */
@@ -9,7 +12,7 @@ export class ProjectionEngine {
             // 1. Resolve the path (fallback to 'path' if 'from' is omitted)
             const fetchPath = fieldConfig.from || fieldConfig.path;
             // Use lodash.get to safely extract nested values (e.g. 'emails[0]')
-            let value = get(profile, fetchPath);
+            let value = (0, lodash_es_1.get)(profile, fetchPath);
             // 2. Handle missing data strictly according to policy
             if (value === undefined || value === null || (Array.isArray(value) && value.length === 0)) {
                 if (fieldConfig.required || config.on_missing === 'error') {
@@ -40,3 +43,4 @@ export class ProjectionEngine {
         return output;
     }
 }
+exports.ProjectionEngine = ProjectionEngine;

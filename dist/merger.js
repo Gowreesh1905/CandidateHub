@@ -1,4 +1,41 @@
-import * as crypto from 'crypto';
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.groupRecordsByIdentity = groupRecordsByIdentity;
+exports.mergeCandidateGroup = mergeCandidateGroup;
+const crypto = __importStar(require("crypto"));
 // Field-level trust weights per source (0.0 to 1.0)
 const TRUST_MATRIX = {
     'Resume PDF': {
@@ -21,7 +58,7 @@ const DEFAULT_TRUST = 0.5;
  * Step 1: Identity Resolution
  * Groups records that belong to the same candidate based on match keys.
  */
-export function groupRecordsByIdentity(records) {
+function groupRecordsByIdentity(records) {
     const groups = [];
     for (const record of records) {
         let matchedGroup = groups.find(group => {
@@ -55,7 +92,7 @@ export function groupRecordsByIdentity(records) {
  * Step 2: Conflict Resolution & Merging
  * Merges a group of records belonging to one candidate into a single CanonicalProfile.
  */
-export function mergeCandidateGroup(group) {
+function mergeCandidateGroup(group) {
     const merged = {
         candidate_id: crypto.randomUUID(),
         provenance: []

@@ -1,45 +1,48 @@
-import { z } from 'zod';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CanonicalProfileSchema = void 0;
+const zod_1 = require("zod");
 // Zod schema for runtime validation of the final Canonical output
-export const CanonicalProfileSchema = z.object({
-    candidate_id: z.string().uuid(),
-    full_name: z.string(),
-    emails: z.array(z.string().email()),
-    phones: z.array(z.string()),
-    location: z.object({
-        city: z.string().optional(),
-        region: z.string().optional(),
-        country: z.string().length(2).optional(), // ISO-3166 alpha-2
+exports.CanonicalProfileSchema = zod_1.z.object({
+    candidate_id: zod_1.z.string().uuid(),
+    full_name: zod_1.z.string(),
+    emails: zod_1.z.array(zod_1.z.string().email()),
+    phones: zod_1.z.array(zod_1.z.string()),
+    location: zod_1.z.object({
+        city: zod_1.z.string().optional(),
+        region: zod_1.z.string().optional(),
+        country: zod_1.z.string().length(2).optional(), // ISO-3166 alpha-2
     }).optional(),
-    links: z.object({
-        linkedin: z.string().url().optional(),
-        github: z.string().url().optional(),
-        portfolio: z.string().url().optional(),
-        other: z.array(z.string().url()).optional(),
+    links: zod_1.z.object({
+        linkedin: zod_1.z.string().url().optional(),
+        github: zod_1.z.string().url().optional(),
+        portfolio: zod_1.z.string().url().optional(),
+        other: zod_1.z.array(zod_1.z.string().url()).optional(),
     }).optional(),
-    headline: z.string().nullable().optional(),
-    years_experience: z.number().nullable().optional(),
-    skills: z.array(z.object({
-        name: z.string(),
-        confidence: z.number().min(0).max(1),
-        sources: z.array(z.string())
+    headline: zod_1.z.string().nullable().optional(),
+    years_experience: zod_1.z.number().nullable().optional(),
+    skills: zod_1.z.array(zod_1.z.object({
+        name: zod_1.z.string(),
+        confidence: zod_1.z.number().min(0).max(1),
+        sources: zod_1.z.array(zod_1.z.string())
     })).optional(),
-    experience: z.array(z.object({
-        company: z.string(),
-        title: z.string(),
-        start: z.string(), // YYYY-MM
-        end: z.string().optional(), // YYYY-MM or 'Present'
-        summary: z.string().optional()
+    experience: zod_1.z.array(zod_1.z.object({
+        company: zod_1.z.string(),
+        title: zod_1.z.string(),
+        start: zod_1.z.string(), // YYYY-MM
+        end: zod_1.z.string().optional(), // YYYY-MM or 'Present'
+        summary: zod_1.z.string().optional()
     })).optional(),
-    education: z.array(z.object({
-        institution: z.string(),
-        degree: z.string().optional(),
-        field: z.string().optional(),
-        end_year: z.string().optional()
+    education: zod_1.z.array(zod_1.z.object({
+        institution: zod_1.z.string(),
+        degree: zod_1.z.string().optional(),
+        field: zod_1.z.string().optional(),
+        end_year: zod_1.z.string().optional()
     })).optional(),
-    provenance: z.array(z.object({
-        field: z.string(),
-        source: z.string(),
-        method: z.string()
+    provenance: zod_1.z.array(zod_1.z.object({
+        field: zod_1.z.string(),
+        source: zod_1.z.string(),
+        method: zod_1.z.string()
     })).optional(),
-    overall_confidence: z.number().min(0).max(1)
+    overall_confidence: zod_1.z.number().min(0).max(1)
 });

@@ -24,13 +24,19 @@ npx tsc
 
 We have provided two sets of mock data so you can test both the "Happy Path" and the advanced edge-case handling.
 
-**1. The Happy Path (Perfect Merging)**
+**1. The Happy Path (Default Projection)**
 This tests the pipeline on standard data. It perfectly merges "John Doe" across the CSV and PDF based on his email, intelligently resolving conflicts using the Field-Level Trust Matrix.
 ```bash
 node dist/index.js --csv mock-data/happy-path/recruiter.csv --pdf mock-data/happy-path/resume.pdf --config mock-data/happy-path/config.json
 ```
 
-**2. The Edge Cases (Strict Validation & Identity Checks)**
+**2. The Custom Config Twist (Dynamic Projection)**
+This tests the exact same "Happy Path" files, but uses a completely different configuration file to dynamically reshape the JSON output (nesting fields, omitting skills, renaming keys) without changing any code.
+```bash
+node dist/index.js --csv mock-data/happy-path/recruiter.csv --pdf mock-data/happy-path/resume.pdf --config mock-data/happy-path/custom-config.json
+```
+
+**3. The Edge Cases (Strict Validation & Identity Checks)**
 This tests the robust safety mechanisms of the pipeline. It features a CSV with two different candidates who share the same phone number (the Identity Resolution prevents a bad merge), and a candidate missing a required email (triggering a graceful Projection Validation error).
 ```bash
 node dist/index.js --csv mock-data/edge-cases/edge-cases.csv --pdf mock-data/edge-cases/mary-edge-resume.pdf --config mock-data/edge-cases/config.json

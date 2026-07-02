@@ -37,14 +37,18 @@ const commander_1 = require("commander");
 const fs = __importStar(require("fs"));
 const CsvIngestor_js_1 = require("./ingestors/CsvIngestor.js");
 const PdfResumeIngestor_js_1 = require("./ingestors/PdfResumeIngestor.js");
+const AtsJsonIngestor_js_1 = require("./ingestors/AtsJsonIngestor.js");
+const GithubApiIngestor_js_1 = require("./ingestors/GithubApiIngestor.js");
 const merger_js_1 = require("./merger.js");
 const projector_js_1 = require("./projector.js");
 const program = new commander_1.Command();
 program
     .name('eightfold-transformer')
     .description('Multi-Source Candidate Data Transformer')
-    .option('--csv <path>', 'Path to structured Recruiter CSV')
-    .option('--pdf <path>', 'Path to unstructured Resume PDF')
+    .option('--csv <paths>', 'Comma-separated paths to structured Recruiter CSVs', (val) => val.split(','))
+    .option('--pdf <paths>', 'Comma-separated paths to unstructured Resume PDFs', (val) => val.split(','))
+    .option('--ats <paths>', 'Comma-separated paths/URLs to ATS JSON data', (val) => val.split(','))
+    .option('--github <urls>', 'Comma-separated public GitHub profile URLs', (val) => val.split(','))
     .option('--config <path>', 'Path to the runtime projection JSON config')
     .action(async (options) => {
     try {
@@ -56,15 +60,33 @@ program
         const config = JSON.parse(configRaw);
         // 2. Ingestion
         const allNormalizedRecords = [];
-        if (options.csv) {
+        if (options.csv && options.csv.length > 0) {
             const csvIngestor = new CsvIngestor_js_1.CsvIngestor();
-            const records = await csvIngestor.ingest(options.csv);
-            allNormalizedRecords.push(...records);
+            for (const csvPath of options.csv) {
+                const records = await csvIngestor.ingest(csvPath.trim());
+                allNormalizedRecords.push(...records);
+            }
         }
-        if (options.pdf) {
+        if (options.pdf && options.pdf.length > 0) {
             const pdfIngestor = new PdfResumeIngestor_js_1.PdfResumeIngestor();
-            const records = await pdfIngestor.ingest(options.pdf);
-            allNormalizedRecords.push(...records);
+            for (const pdfPath of options.pdf) {
+                const records = await pdfIngestor.ingest(pdfPath.trim());
+                allNormalizedRecords.push(...records);
+            }
+        }
+        if (options.ats && options.ats.length > 0) {
+            const atsIngestor = new AtsJsonIngestor_js_1.AtsJsonIngestor();
+            for (const atsPath of options.ats) {
+                const records = await atsIngestor.ingest(atsPath.trim());
+                allNormalizedRecords.push(...records);
+            }
+        }
+        if (options.github && options.github.length > 0) {
+            const githubIngestor = new GithubApiIngestor_js_1.GithubApiIngestor();
+            for (const ghUrl of options.github) {
+                const records = await githubIngestor.ingest(ghUrl.trim());
+                allNormalizedRecords.push(...records);
+            }
         }
         if (allNormalizedRecords.length === 0) {
             console.warn("Warning: No valid inputs provided. Returning empty array.");

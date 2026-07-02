@@ -1,0 +1,20 @@
+{
+  "candidates": [
+    {
+      "applicant_id": "ATS-789",
+      "applicant_name": "Alex ATS",
+      "contact_info": {
+        "email_address": "alex@ats.com",
+        "phone_number": "333-333-3333"
+      },
+      "professional_skills": ["Python", "Kubernetes", "Docker"],
+      "employment_history": [
+        {
+          "employer": "Tech ATS Corp",
+          "job_title": "DevOps Engineer",
+          "start_date": "2020-01-15"
+        }
+      ]
+    }
+  ]
+}

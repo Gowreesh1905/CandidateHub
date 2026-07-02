@@ -2,6 +2,8 @@ import { Command } from 'commander';
 import * as fs from 'fs';
 import { CsvIngestor } from './ingestors/CsvIngestor.js';
 import { PdfResumeIngestor } from './ingestors/PdfResumeIngestor.js';
+import { AtsJsonIngestor } from './ingestors/AtsJsonIngestor.js';
+import { GithubApiIngestor } from './ingestors/GithubApiIngestor.js';
 import { groupRecordsByIdentity, mergeCandidateGroup } from './merger.js';
 import { ProjectionEngine } from './projector.js';
 import type { ProjectionConfig } from './types.js';
@@ -11,8 +13,10 @@ const program = new Command();
 program
   .name('eightfold-transformer')
   .description('Multi-Source Candidate Data Transformer')
-  .option('--csv <path>', 'Path to structured Recruiter CSV')
-  .option('--pdf <path>', 'Path to unstructured Resume PDF')
+  .option('--csv <paths>', 'Comma-separated paths to structured Recruiter CSVs', (val) => val.split(','))
+  .option('--pdf <paths>', 'Comma-separated paths to unstructured Resume PDFs', (val) => val.split(','))
+  .option('--ats <paths>', 'Comma-separated paths/URLs to ATS JSON data', (val) => val.split(','))
+  .option('--github <urls>', 'Comma-separated public GitHub profile URLs', (val) => val.split(','))
   .option('--config <path>', 'Path to the runtime projection JSON config')
   .action(async (options) => {
     try {
@@ -27,16 +31,36 @@ program
       // 2. Ingestion
       const allNormalizedRecords = [];
       
-      if (options.csv) {
+      if (options.csv && options.csv.length > 0) {
         const csvIngestor = new CsvIngestor();
-        const records = await csvIngestor.ingest(options.csv);
-        allNormalizedRecords.push(...records);
+        for (const csvPath of options.csv) {
+          const records = await csvIngestor.ingest(csvPath.trim());
+          allNormalizedRecords.push(...records);
+        }
       }
 
-      if (options.pdf) {
+      if (options.pdf && options.pdf.length > 0) {
         const pdfIngestor = new PdfResumeIngestor();
-        const records = await pdfIngestor.ingest(options.pdf);
-        allNormalizedRecords.push(...records);
+        for (const pdfPath of options.pdf) {
+          const records = await pdfIngestor.ingest(pdfPath.trim());
+          allNormalizedRecords.push(...records);
+        }
+      }
+
+      if (options.ats && options.ats.length > 0) {
+        const atsIngestor = new AtsJsonIngestor();
+        for (const atsPath of options.ats) {
+          const records = await atsIngestor.ingest(atsPath.trim());
+          allNormalizedRecords.push(...records);
+        }
+      }
+
+      if (options.github && options.github.length > 0) {
+        const githubIngestor = new GithubApiIngestor();
+        for (const ghUrl of options.github) {
+          const records = await githubIngestor.ingest(ghUrl.trim());
+          allNormalizedRecords.push(...records);
+        }
       }
 
       if (allNormalizedRecords.length === 0) {

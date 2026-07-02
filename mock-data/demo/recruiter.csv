@@ -1,0 +1,6 @@
+name,email,phone,current_company,title
+John Doe,john.doe@example.com,555-123-4567,Acme Corp,Software Engineer
+Jane Smith,jane.smith@example.com,555-987-6543,Beta Inc,Product Manager
+John Edge,john@edge.com,123-456-7890,Company A,Developer
+Mary Edge,mary@edge.com,123-456-7890,Company B,Manager
+,,999-999-9999,Company C,Intern
